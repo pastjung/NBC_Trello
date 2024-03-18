@@ -1,7 +1,7 @@
 package com.nbc.trello.global.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nbc.trello.User.UserRoleEnum;
+import com.nbc.trello.user.UserRoleEnum;
 import com.nbc.trello.global.dto.request.LoginRequestDto;
 import com.nbc.trello.global.util.JwtUtil;
 import com.nbc.trello.global.util.UserDetailsImpl;

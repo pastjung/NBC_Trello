@@ -1,4 +1,4 @@
-package com.nbc.trello.User;
+package com.nbc.trello.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

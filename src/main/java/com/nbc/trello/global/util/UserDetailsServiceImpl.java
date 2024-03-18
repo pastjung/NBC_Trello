@@ -1,7 +1,7 @@
 package com.nbc.trello.global.util;
 
-import com.nbc.trello.User.User;
-import com.nbc.trello.User.UserRepository;
+import com.nbc.trello.user.User;
+import com.nbc.trello.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

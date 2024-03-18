@@ -14,6 +14,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -51,13 +52,22 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 }
             } else{
                 // 인증 정보가 존재하지 않을 경우
-                CommonResponse commonResponse = new CommonResponse("토큰이 유효하지 않습니다", HttpStatus.BAD_REQUEST.value());
+                String jsonResponse = new ObjectMapper().writeValueAsString(
+                    // objectMapper : 응답 객체를 String 으로 변환
+                    CommonResponse.<Void>builder()
+                        .msg("토큰이 유효하지 않습니다")
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .build()
+                );
 
                 // response 의 body 설정
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 응답 값에 status 세팅
-                response.setContentType("application/json:charset=UTF-8");  // Body 가 깨지지 않게 UTF-8로 설정
-                response.getWriter().write(objectMapper.writeValueAsString(commonResponse));    // Body 부분에 생성한 responseDto 삽입
-                // objectMapper : 응답 객체를 String 으로 변환
+                response.setStatus(HttpStatus.BAD_REQUEST.value());         // 응답 상태 코드 설정
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);  // 응답의 Content-Type 설정
+                response.setCharacterEncoding("UTF-8");                     // 응답의 문자 인코딩 설정
+                response.getWriter().write(jsonResponse);                   // 응답 body에 JSON 데이터 작성
+
+                log.error("Token Error");
+                return;
             }
         }
         // 다음 Filter 를 적용할 수 있도록 설정

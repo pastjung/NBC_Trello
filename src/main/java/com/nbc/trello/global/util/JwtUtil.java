@@ -1,6 +1,6 @@
 package com.nbc.trello.global.util;
 
-import com.nbc.trello.User.UserRoleEnum;
+import com.nbc.trello.user.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
