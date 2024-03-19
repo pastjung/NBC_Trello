@@ -1,6 +1,7 @@
 package com.nbc.trello.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nbc.trello.domain.refreshToken.RefreshTokenRepository;
 import com.nbc.trello.global.filter.JwtAuthenticationFilter;
 import com.nbc.trello.global.filter.JwtAuthorizationFilter;
 import com.nbc.trello.global.util.JwtUtil;
@@ -26,8 +27,8 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final ObjectMapper objectMapper;
-
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     // Password Encoder : 기존 Default 로 생성된 Password Encoder 대신 BCryptPasswordEncoder 사용
@@ -39,7 +40,7 @@ public class WebSecurityConfig {
     // JwtAuthorizationFilter 수동 주입 : Filter 실행(JwtAuthorizationFilter, JwtAuthenticationFilter 적용)
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsServiceImpl, objectMapper);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsServiceImpl, objectMapper, refreshTokenRepository);
     }
 
     // AuthenticationManager 수동 주입
@@ -51,7 +52,7 @@ public class WebSecurityConfig {
     // JwtAuthenticationFilter 수동 주입
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, refreshTokenRepository);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }

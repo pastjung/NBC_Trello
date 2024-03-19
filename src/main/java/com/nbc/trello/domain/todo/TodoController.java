@@ -1,8 +1,8 @@
-package com.nbc.trello.user;
+package com.nbc.trello.domain.todo;
 
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class UserController {
+public class TodoController {
 
 }

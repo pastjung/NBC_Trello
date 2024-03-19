@@ -1,7 +1,7 @@
 package com.nbc.trello.global.util;
 
-import com.nbc.trello.user.User;
-import com.nbc.trello.user.UserRoleEnum;
+import com.nbc.trello.domain.user.User;
+import com.nbc.trello.domain.user.UserRoleEnum;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +21,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override

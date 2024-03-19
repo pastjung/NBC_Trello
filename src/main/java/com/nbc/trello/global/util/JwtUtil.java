@@ -1,6 +1,6 @@
 package com.nbc.trello.global.util;
 
-import com.nbc.trello.user.UserRoleEnum;
+import com.nbc.trello.domain.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -30,6 +30,11 @@ public class JwtUtil {
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료 시간
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private final long ACCESS_TOKEN_TIME = 60 * 1000L; // 1분
+    //private final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private final long REFRESH_TOKEN_TIME = 600 * 1000L; // 10분
+    //private final long REFRESH_TOKEN_TIME = 30 * 24 * 60 * 60 * 1000L; // 30일
+
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
@@ -86,20 +91,51 @@ public class JwtUtil {
     }
 
     // 인증(Authentication)
-    public String createToken(String username, UserRoleEnum userRole) {
+    public String createToken(User user) {
         Date date = new Date();
 
         // 토큰 생성
         return BEARER_PREFIX +
             Jwts.builder()
-                .setSubject(username)                                   // 사용자 식별자값(ID)
-                .claim(AUTHORIZATION_KEY, userRole.toString())          // 사용자 권한
+                .setSubject(user.getEmail())                            // 사용자 식별자값(ID)
+                .claim(AUTHORIZATION_KEY, user.getUserRole().toString())// 사용자 권한
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))   // 만료 시간
                 .setIssuedAt(date)                                      // 발급일 : 생성된 시간
                 .signWith(key, signatureAlgorithm)                      // 암호화 알고리즘
                 .compact();
     }
 
+    // 인증(Authentication) : JWT 토큰 생성
+    public String createAccessToken(User user) {
+        Date date = new Date();
+
+        // 토큰 생성
+        return BEARER_PREFIX +
+            Jwts.builder()
+                .setSubject(user.getEmail())                                    // 사용자 식별자값(ID)
+                .claim("userId", user.getId())                               // 사용자 ID
+                .claim(AUTHORIZATION_KEY, user.getUserRole().toString())        // 사용자 권한
+                .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))    // 만료 시간
+                .setIssuedAt(date)                                              // 발급일 : 생성된 시간
+                .signWith(key, signatureAlgorithm)                              // 암호화 알고리즘
+                .compact();
+    }
+
+    // 인증(Authentication) : JWT 토큰 생성
+    public String createRefreshToken(User user) {
+        Date date = new Date();
+
+        // 토큰 생성
+        return BEARER_PREFIX +
+            Jwts.builder()
+                .setSubject(user.getEmail())                                    // 사용자 식별자값(ID)
+                .claim("userId", user.getId())                               // 사용자 ID
+                .claim(AUTHORIZATION_KEY, user.getUserRole().toString())        // 사용자 권한
+                .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))   // 만료 시간
+                .setIssuedAt(date)                                              // 발급일 : 생성된 시간
+                .signWith(key, signatureAlgorithm)                              // 암호화 알고리즘
+                .compact();
+    }
 
     // setSubject() : JWT 에 대한 제목
     // setExpiration() : JWT 만료기한 지정 . 파라미터 타입은 java.util.Date
@@ -115,6 +151,6 @@ public class JwtUtil {
         claims.put("role", user.getRole());
         claims.put("address", user.getAddress());
 
-        setClaims(claims);
+        setClaims(claims)
      */
 }
