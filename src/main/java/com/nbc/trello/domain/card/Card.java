@@ -49,10 +49,6 @@ public class Card {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id")
     private Todo todo;
-
-    @OneToMany(mappedBy = "card")
-    private List<Comment> commentList = new ArrayList<>();
-
 /*
     public Card (CardRequestDto cardRequestDto){
         this.name = cardRequestDto.getName();

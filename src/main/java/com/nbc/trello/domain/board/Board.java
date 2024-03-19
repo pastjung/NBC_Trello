@@ -38,14 +38,9 @@ public class Board extends TimeStamped {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "board")
-    private List<Todo> todoList = new ArrayList<>();
-
-/*
     public Board(BoardRequestDto requestDto) {
         this.name = requestDto.getName();
         this.color = requestDto.getColor();
         this.description = requestDto.getDescription();
     }
- */
 }
