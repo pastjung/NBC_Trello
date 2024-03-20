@@ -66,15 +66,13 @@ public class BoardController {
     @DeleteMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponse<BoardResponseDto>> deleteBoard(
         @PathVariable Long board_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        BoardResponseDto responseDto = boardService.deleteBoard(board_id,
-            userDetails.getUser());
+        BoardResponseDto responseDto = boardService.deleteBoard(board_id, userDetails.getUser());
         return ResponseEntity.ok()
             .body(CommonResponse.<BoardResponseDto>builder()
                 .msg("보드 삭제에 성공하였습니다.")
                 .statusCode(200)
                 .data(responseDto)
                 .build());
-
     }
 
     //보드 초대
