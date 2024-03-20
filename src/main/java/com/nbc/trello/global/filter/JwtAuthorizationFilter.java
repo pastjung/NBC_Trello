@@ -63,7 +63,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     log.error(e.getMessage());
                     return;
                 }
-            } else if(JwtTokenStatus == 1){
+            } else if (JwtTokenStatus == 1) {
                 // accessToken 의 기간이 만료된 토큰
                 try {
                     // Claim 정보에 유저 정보 넣기
@@ -71,14 +71,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                     // 사용자 정보 가져오기
                     UserDetailsImpl userDetails
-                        = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(info.getSubject());
+                        = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(
+                        info.getSubject());
 
                     // 가져온 사용자 정보를 이용해 서버에서 refreshToken 탐색
-                    RefreshToken refreshToken = refreshTokenRepository.findByUserId(userDetails.getUser().getId());
+                    RefreshToken refreshToken = refreshTokenRepository.findByUserId(
+                        userDetails.getUser().getId());
 
                     if (refreshToken != null
-                        && jwtUtil.validateToken(refreshToken.getRefreshToken()) == 0)
-                    {
+                        && jwtUtil.validateToken(refreshToken.getRefreshToken()) == 0) {
                         // refreshToken 이 정상 & 만료되지 않은 경우 : accessToken 발급
                         User user = userDetails.getUser();
                         String newAccessToken = jwtUtil.createAccessToken(user);
@@ -111,7 +112,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     log.error("JWT 인가 오류");
                     return;
                 }
-            } else{
+            } else {
                 // 인증 정보가 존재하지 않을 경우
                 String jsonResponse = new ObjectMapper().writeValueAsString(
                     // objectMapper : 응답 객체를 String 으로 변환

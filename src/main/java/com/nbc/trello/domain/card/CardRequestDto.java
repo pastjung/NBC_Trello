@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter
+@Setter
+@Getter
 @NoArgsConstructor
 public class CardRequestDto {
+
     private Long boardId;
     private Long columnId;
     private Long cardId;
@@ -17,7 +19,8 @@ public class CardRequestDto {
     private String pic;
     private LocalDateTime deadline;
 
-    public CardRequestDto(String name, String description, String background, String pic, LocalDateTime deadline){
+    public CardRequestDto(String name, String description, String background, String pic,
+        LocalDateTime deadline) {
         this.name = name;
         this.description = description;
         this.background = background;
@@ -25,7 +28,7 @@ public class CardRequestDto {
         this.deadline = deadline;
     }
 
-    public CardRequestDto(Card card){
+    public CardRequestDto(Card card) {
         this.name = card.getName();
         this.description = card.getDescription();
         this.background = card.getColor();

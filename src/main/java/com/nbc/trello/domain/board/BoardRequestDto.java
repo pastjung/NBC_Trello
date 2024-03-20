@@ -8,14 +8,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BoardRequestDto {
 
-  @NotBlank(message = "제목을 입력해주세요.")
-  private String name;
+    @NotBlank(message = "제목을 입력해주세요.")
+    private String name;
 
-  @NotBlank(message = "색상을 입력해주세요.")
-  private String color;
+    @NotBlank(message = "색상을 입력해주세요.")
+    private String color;
 
-  @NotBlank(message = "설명을 입력해주세요.")
-  private String description;
+    @NotBlank(message = "설명을 입력해주세요.")
+    private String description;
 
 }
 

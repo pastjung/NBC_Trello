@@ -5,8 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class CardCommentResponseDto {
     private String description;
     private List<getCommentResponseDto> getCommentResponseDtoList = new ArrayList<>();
 
-    public CardCommentResponseDto(Card card){
+    public CardCommentResponseDto(Card card) {
         this.cardId = card.getId();
         this.name = card.getName();
         this.description = card.getDescription();

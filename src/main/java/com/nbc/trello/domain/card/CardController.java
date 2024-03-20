@@ -17,14 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @RequiredArgsConstructor
 public class CardController {
+
     private final CardService cardService;
 
     @PostMapping("/boards/{board_id}/columns/{column_id}/cards")
     public ResponseEntity<CommonResponse<CardResponseDto>> createCard(
         @PathVariable("board_id") Long boardId,
-        @PathVariable("column_id") Long columnId, @RequestBody CardRequestDto cardRequestDto){
+        @PathVariable("column_id") Long columnId, @RequestBody CardRequestDto cardRequestDto) {
 
-        CardResponseDto cardResponseDto = cardService.CardCreateService(boardId, columnId, cardRequestDto);
+        CardResponseDto cardResponseDto = cardService.CardCreateService(boardId, columnId,
+            cardRequestDto);
 
         return ResponseEntity.ok(CommonResponse.<CardResponseDto>builder()
             .msg("카드 생성에 성공하였습니다.")
@@ -37,7 +39,7 @@ public class CardController {
     public ResponseEntity<CommonResponse<CardCommentResponseDto>> getCard(
         @PathVariable("board_id") Long boardId,
         @PathVariable("column_id") Long columnId,
-        @PathVariable("card_id") Long card_id){
+        @PathVariable("card_id") Long card_id) {
 
         CardCommentResponseDto cardCommentResponseDto = cardService.CardGetService(boardId,
             columnId, card_id);
@@ -53,7 +55,7 @@ public class CardController {
     public ResponseEntity<CommonResponse<CardResponseDto>> deleteCard(
         @PathVariable("board_id") Long boardId,
         @PathVariable("column_id") Long columnId,
-        @PathVariable("card_id") Long card_id){
+        @PathVariable("card_id") Long card_id) {
 
         CardResponseDto cardResponseDto = cardService.CardDeleteService(boardId, columnId, card_id);
 
@@ -68,9 +70,10 @@ public class CardController {
     public ResponseEntity<CommonResponse<CardResponseDto>> updateCard(
         @PathVariable("board_id") Long boardId,
         @PathVariable("column_id") Long columnId,
-        @PathVariable("card_id") Long card_id, @RequestBody CardRequestDto cardRequestDto){
+        @PathVariable("card_id") Long card_id, @RequestBody CardRequestDto cardRequestDto) {
 
-        CardResponseDto cardResponseDto = cardService.CardUpdateService(boardId, columnId, card_id,cardRequestDto);
+        CardResponseDto cardResponseDto = cardService.CardUpdateService(boardId, columnId, card_id,
+            cardRequestDto);
 
         return ResponseEntity.ok(CommonResponse.<CardResponseDto>builder()
             .msg("카드 수정에 성공하였습니다.")

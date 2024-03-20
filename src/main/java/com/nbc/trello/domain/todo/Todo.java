@@ -22,30 +22,30 @@ import lombok.NoArgsConstructor;
 @Table(name = "todos")
 public class Todo extends TimeStamped {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column
-  private Long page;
+    @Column
+    private Long page;
 
-  @Column(nullable = false)
-  private String title;
+    @Column(nullable = false)
+    private String title;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "board_id")
-  private Board board;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-  @Builder
-  public Todo(String title) {
-    this.title = title;
-  }
+    @Builder
+    public Todo(String title) {
+        this.title = title;
+    }
 
-  public void update(TodoRequestDto requestDto) {
-    this.title = requestDto.getTitle();
-  }
+    public void update(TodoRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+    }
 }

@@ -11,13 +11,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 // UserDetails : Spring Security 에서 사용자의 정보를 나타내는 인터페이스
 // UserDetailsImpl : 사용자의 정보를 제공하는 클래스
 public class UserDetailsImpl implements UserDetails {
+
     private final User user;
 
     public UserDetailsImpl(User user) {
         this.user = user;
     }
 
-    public User getUser() { return user; }
+    public User getUser() {
+        return user;
+    }
 
     @Override
     public String getUsername() {

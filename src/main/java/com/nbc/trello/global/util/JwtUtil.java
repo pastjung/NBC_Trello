@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 @Slf4j(topic = "JwtUtil")
 @Component  // Bean 으로 사용할 수 있게 설정
 public class JwtUtil {
+
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
     // 사용자 권한 값의 KEY

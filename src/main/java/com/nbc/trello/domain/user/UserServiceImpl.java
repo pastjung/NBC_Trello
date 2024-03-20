@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final String ADMIN_TOKEN = "f679d89c320cc4adb72b7647a64ccbe520406dc3ee4578b44bcffbfa7ebbb85e30b964306b6398d3a2d7098ecd1bc203551e356ac5ec4a5ee0c7dc899fb704c5";
 
     @Override
-    public Long signup(SignupRequestDto requestDto){
+    public Long signup(SignupRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = passwordEncoder.encode(requestDto.getPassword()); // 비밀번호 암호화
         String nickname = requestDto.getUsername();
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserInfoResponseDto updateUser(User user, UserInfoRequestDto requestDto){
+    public UserInfoResponseDto updateUser(User user, UserInfoRequestDto requestDto) {
         String username = requestDto.getUsername();
         User savedUser = getUserById(user.getId());
 

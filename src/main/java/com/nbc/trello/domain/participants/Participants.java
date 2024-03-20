@@ -1,7 +1,5 @@
 package com.nbc.trello.domain.participants;
 
-import com.nbc.trello.domain.board.Board;
-import com.nbc.trello.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,21 +17,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Participants {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column
-  private Long userId;
+    @Column
+    private Long userId;
 
-  @Column
-  private Long boardId;
+    @Column
+    private Long boardId;
 
-  @Column
-  private Boolean generator = false;
+    @Column
+    private Boolean generator = false;
 
-  public Participants(Long userId, Long boardId) {
-    this.userId = userId;
-    this.boardId = boardId;
-  }
+    public Participants(Long userId, Long boardId) {
+        this.userId = userId;
+        this.boardId = boardId;
+    }
 }

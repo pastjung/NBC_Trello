@@ -77,7 +77,7 @@
       window.location.href = host;
     })
     .fail(function (jqXHR, textStatus) {
-      alert(email + " " +  password + " " + "Login Fail");
+      alert(email + " " + password + " " + "Login Fail");
       window.location.href = host + '/api/user/login-page?error'
     });
   }

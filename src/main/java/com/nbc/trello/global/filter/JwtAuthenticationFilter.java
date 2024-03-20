@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -31,12 +32,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+        HttpServletResponse response) throws AuthenticationException {
         try {
             // 로그인 시도 : JSON 데이터를 LoginRequestDto 객체로 변환
             // request.getInputStream() : 요청으로부터 받은 데이터를 읽어옴
             // ObjectMapper : JSON 형식의 데이터를 LoginRequestDto 객체로 매핑
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+                LoginRequestDto.class);
 
             log.info("로그인 시도");
 
@@ -57,7 +60,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, FilterChain chain, Authentication authResult)
+        throws IOException {
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authResult.getPrincipal();
         User user = userDetailsImpl.getUser();
 
@@ -79,13 +84,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.error("로그인 실패");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 
     // refreshToken 검증 : RefreshToken 이 없으면 true
-    private boolean validateRefreshToken(HttpServletResponse response, UserDetailsImpl userDetailsImpl)
+    private boolean validateRefreshToken(HttpServletResponse response,
+        UserDetailsImpl userDetailsImpl)
         throws IOException {
         log.info("DB 에서 RefreshToken 존재 여부 확인");
         if (refreshTokenRepository.findByUserId(userDetailsImpl.getUser().getId()) != null) {

@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 @JsonInclude(Include.NON_NULL)
 public class CardResponseDto {
 
-  private Long boardId;
-  private Long columnId;
-  private Long cardId;
-  private String name;
+    private Long boardId;
+    private Long columnId;
+    private Long cardId;
+    private String name;
 
-  public CardResponseDto(Long boardId, Long columnId, Long cardId) {
-    this.boardId = boardId;
-    this.columnId = columnId;
-    this.cardId = cardId;
-  }
+    public CardResponseDto(Long boardId, Long columnId, Long cardId) {
+        this.boardId = boardId;
+        this.columnId = columnId;
+        this.cardId = cardId;
+    }
 
-  public CardResponseDto(Card card) {
-    this.name = card.getName();
-  }
+    public CardResponseDto(Card card) {
+        this.name = card.getName();
+    }
 }

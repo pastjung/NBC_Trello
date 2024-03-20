@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity  // Spring Security 사용 정의
 @RequiredArgsConstructor    // 모든 필드를 가지는 생성자 생성
 public class WebSecurityConfig {
+
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final ObjectMapper objectMapper;
@@ -40,19 +41,22 @@ public class WebSecurityConfig {
     // JwtAuthorizationFilter 수동 주입 : Filter 실행(JwtAuthorizationFilter, JwtAuthenticationFilter 적용)
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsServiceImpl, objectMapper, refreshTokenRepository);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsServiceImpl, objectMapper,
+            refreshTokenRepository);
     }
 
     // AuthenticationManager 수동 주입
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+        throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     // JwtAuthenticationFilter 수동 주입
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, refreshTokenRepository);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil,
+            refreshTokenRepository);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -77,7 +81,8 @@ public class WebSecurityConfig {
                 .permitAll()                              // resources 접근 허용 설정, permitAll() : 접근 허가
                 .requestMatchers("/").permitAll()       // 메인 페이지 접근 허용
                 .requestMatchers("/**").permitAll()     // 모든 페이지 접근 허가
-                .anyRequest().authenticated());           // anyRequest() : 위 설정 이외 모두, authenticated() : jwt 인증 필요함
+                .anyRequest()
+                .authenticated());           // anyRequest() : 위 설정 이외 모두, authenticated() : jwt 인증 필요함
 
         // 로그인 사용
         httpSecurity.formLogin((formLogin) ->
@@ -85,8 +90,10 @@ public class WebSecurityConfig {
         );
 
         // Filter 관리
-        httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);                  // JWT 검증 및 인가
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);    // 로그인 및 JWT 생성
+        httpSecurity.addFilterBefore(jwtAuthorizationFilter(),
+            JwtAuthenticationFilter.class);                  // JWT 검증 및 인가
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter(),
+            UsernamePasswordAuthenticationFilter.class);    // 로그인 및 JWT 생성
 
         return httpSecurity.build();
     }
