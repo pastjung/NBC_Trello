@@ -33,9 +33,9 @@ public class CommentService {
         validateParticipants(boardId, user);
         // 카드 확인
         Card card = findCardBy(cardId);
-        // to-do 가 보드에 있는지
+        // to-do 가 보드에 있는지 확인
         validateTodoExistInBoard(boardId, todoId);
-        // 카드가 to-do 에 있는지
+        // 카드가 to-do 에 있는지 확인
         validateCardExistInTodo(todoId, cardId);
 
         Comment comment = new Comment(request.getContent(), user, card);
@@ -52,11 +52,11 @@ public class CommentService {
 
         validateParticipants(boardId, user);
 
-        Card card = findCardBy(cardId);
-
         validateTodoExistInBoard(boardId, todoId);
 
         validateCardExistInTodo(todoId, cardId);
+        // 카드에 댓글이 있는지
+        validateCommentExistInCard(cardId, commentId);
 
         Comment comment = findCommentBy(commentId);
 
@@ -74,11 +74,11 @@ public class CommentService {
 
         validateParticipants(boardId, user);
 
-        Card card = findCardBy(cardId);
-
         validateTodoExistInBoard(boardId, todoId);
 
         validateCardExistInTodo(todoId, cardId);
+
+        validateCommentExistInCard(cardId, commentId);
 
         Comment comment = findCommentBy(commentId);
 
@@ -112,6 +112,12 @@ public class CommentService {
         }
     }
 
+    private void validateCommentExistInCard(Long cardId, Long commentId) {
+        if (!commentRepository.existsByIdAndCardId(cardId, commentId)) {
+            throw new EntityExistsException("Card 에 Comment 가 존재하지 않습니다.");
+        }
+    }
+
     private Card findCardBy(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(
             () -> new EntityNotFoundException("Card 가 존재하지 않습니다.")
@@ -120,13 +126,13 @@ public class CommentService {
 
     private Comment findCommentBy(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
-            () -> new EntityNotFoundException("댓글이 존재하지 않습니다.")
+            () -> new EntityNotFoundException("Comment 가 존재하지 않습니다.")
         );
     }
 
     private void userMatchValidate(Comment comment, User user) {
         if (!comment.getUser().equals(user)) {
-            throw new EntityExistsException("본인이 작성한 댓글만 수정할 수 있습니다.");
+            throw new EntityExistsException("본인이 작성한 Comment 만 수정할 수 있습니다.");
         }
     }
 }
