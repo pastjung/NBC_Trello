@@ -36,4 +36,10 @@ public class Board extends TimeStamped {
         this.color = requestDto.getColor();
         this.description = requestDto.getDescription();
     }
+
+    public BoardResponseDto toDto() {
+        BoardResponseDto responseDto = new BoardResponseDto();
+        responseDto.setBoard_id(this.Id);
+        return responseDto;
+    }
 }

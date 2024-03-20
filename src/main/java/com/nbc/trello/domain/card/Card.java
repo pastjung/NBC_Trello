@@ -23,44 +23,45 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class) //자동으로 LocalDateTime 생성
 public class Card extends TimeStamped {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column
-    private String pic;
+  @Column
+  private String name;
 
-    @Column
-    private String description;
+  @Column
+  private String pic;
 
-    @Column
-    private String color;
+  @Column
+  private String description;
 
-    @Column
-    private LocalDateTime deadline;
+  @Column
+  private String color;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "todo_id")
-    private Todo todo;
+  @Column
+  private LocalDateTime deadline;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "todo_id")
+  private Todo todo;
 
 
-    public Card (CardRequestDto cardRequestDto){
-        this.name = cardRequestDto.getName();
-        this.pic = cardRequestDto.getPic();
-        this.description = cardRequestDto.getDescription();
-        this.color = cardRequestDto.getBackground();
-        this.deadline = cardRequestDto.getDeadline();
-    }
+  public Card(CardRequestDto cardRequestDto) {
+    this.name = cardRequestDto.getName();
+    this.pic = cardRequestDto.getPic();
+    this.description = cardRequestDto.getDescription();
+    this.color = cardRequestDto.getBackground();
+    this.deadline = cardRequestDto.getDeadline();
+  }
 
-    public void CardUpdate(CardRequestDto cardRequestDto){
-        this.name = cardRequestDto.getName();
-        this.pic = cardRequestDto.getPic();
-        this.description = cardRequestDto.getDescription();
-        this.color = cardRequestDto.getBackground();
-        this.deadline = cardRequestDto.getDeadline();
-    }
+  public void CardUpdate(CardRequestDto cardRequestDto) {
+    this.name = cardRequestDto.getName();
+    this.pic = cardRequestDto.getPic();
+    this.description = cardRequestDto.getDescription();
+    this.color = cardRequestDto.getBackground();
+    this.deadline = cardRequestDto.getDeadline();
+  }
 
 }

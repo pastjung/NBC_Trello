@@ -1,17 +1,25 @@
 package com.nbc.trello.domain.todo;
 
+import com.nbc.trello.domain.card.CardResponseDto;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class TodoResponseDto {
 
-    private String title;
+  private String title;
 
-    public TodoResponseDto(Todo todo) {
-        this.title = todo.getTitle();
-    }
+  private List<CardResponseDto> cardDtos;
+
+  public TodoResponseDto(Todo todo) {
+    this.title = todo.getTitle();
+  }
+
+  public TodoResponseDto(String title, List<CardResponseDto> cardDtos) {
+    this.title = title;
+    this.cardDtos = cardDtos;
+  }
 }

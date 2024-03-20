@@ -1,11 +1,11 @@
 package com.nbc.trello.domain.card;
 
-
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
 
-    boolean existsByIdAndTodoId(Long cardId, Long todoId);
+  List<Card> findByTodoId(Long id);
+
+  boolean existsByIdAndTodoId(Long cardId, Long todoId);
 }
