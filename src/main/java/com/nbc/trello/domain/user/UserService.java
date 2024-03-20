@@ -17,4 +17,7 @@ public interface UserService {
 
     @Transactional
     UserInfoResponseDto updateUser(User user, UserInfoRequestDto requestDto);
+
+    @Transactional
+    void deleteUser(User user);
 }

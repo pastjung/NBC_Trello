@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,7 +73,7 @@ public class UserController {
         );
     }
 
-    @PutMapping("/update")
+    @PutMapping("/user")
     public ResponseEntity<CommonResponse<UserInfoResponseDto>> updateUser(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @Valid @RequestBody UserInfoRequestDto requestDto) {
@@ -82,6 +83,20 @@ public class UserController {
                 .msg("회원정보가 수정되었습니다.")
                 .statusCode(HttpStatus.OK.value())
                 .data(userService.updateUser(userDetails.getUser(), requestDto))
+                .build()
+        );
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<CommonResponse<Void>> deleteUser(
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        userService.deleteUser(userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(
+            CommonResponse.<Void>builder()
+                .msg("회원이 삭제되었습니다..")
+                .statusCode(HttpStatus.OK.value())
                 .build()
         );
     }
