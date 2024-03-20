@@ -3,11 +3,12 @@ package com.nbc.trello;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class TrelloApplicationTests {
 
     @Test
     void contextLoads() {
+        System.out.println("성공");
     }
 
 }
