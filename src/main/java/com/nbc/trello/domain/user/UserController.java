@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,27 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<CommonResponse<Long>> createUser(
         @Valid @RequestBody SignupRequestDto userRequestDto,
         BindingResult bindingResult
-    ) throws IOException
-    {
+    ) throws IOException {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if(!fieldErrors.isEmpty()) {
+        if (!fieldErrors.isEmpty()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(CommonResponse.<Long>builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .msg("회원가입 실패")
-                .data(null)
-                .build()
-            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+                .body(CommonResponse.<Long>builder()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .msg("회원가입 실패")
+                    .data(null)
+                    .build()
+                );
         }
 
         log.info("회원가입 시도");
@@ -67,6 +69,20 @@ public class UserController {
             .msg("로그아웃 되었습니다.")
             .statusCode(HttpStatus.OK.value())
             .build()
+        );
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<CommonResponse<UserInfoResponseDto>> updateUser(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @Valid @RequestBody UserInfoRequestDto requestDto) {
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(
+            CommonResponse.<UserInfoResponseDto>builder()
+                .msg("회원정보가 수정되었습니다.")
+                .statusCode(HttpStatus.OK.value())
+                .data(userService.updateUser(userDetails.getUser(), requestDto))
+                .build()
         );
     }
 }

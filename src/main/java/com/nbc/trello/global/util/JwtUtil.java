@@ -1,6 +1,7 @@
 package com.nbc.trello.global.util;
 
 import com.nbc.trello.domain.user.User;
+import com.nbc.trello.domain.user.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -99,6 +100,22 @@ public class JwtUtil {
             Jwts.builder()
                 .setSubject(user.getEmail())                            // 사용자 식별자값(ID)
                 .claim(AUTHORIZATION_KEY, user.getUserRole().toString())// 사용자 권한
+                .setExpiration(new Date(date.getTime() + TOKEN_TIME))   // 만료 시간
+                .setIssuedAt(date)                                      // 발급일 : 생성된 시간
+                .signWith(key, signatureAlgorithm)                      // 암호화 알고리즘
+                .compact();
+    }
+
+
+    // 인증(Authentication) : JWT 토큰 생성 (카카오 로그인)
+    public String createKakaoToken(String username, UserRoleEnum userRole) {
+        Date date = new Date();
+
+        // 토큰 생성
+        return BEARER_PREFIX +
+            Jwts.builder()
+                .setSubject(username)                                   // 사용자 식별자값(ID)
+                .claim(AUTHORIZATION_KEY, userRole.toString())          // 사용자 권한
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))   // 만료 시간
                 .setIssuedAt(date)                                      // 발급일 : 생성된 시간
                 .signWith(key, signatureAlgorithm)                      // 암호화 알고리즘

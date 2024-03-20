@@ -32,12 +32,10 @@ public class Todo extends TimeStamped {
     @Column(nullable = false)
     private String title;
 
-    // 해결
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    // 해결
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

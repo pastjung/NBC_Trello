@@ -1,7 +1,5 @@
 package com.nbc.trello.domain.user;
 
-import com.nbc.trello.domain.comment.Comment;
-import com.nbc.trello.domain.todo.Todo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,10 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,17 +29,38 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column
     private String username;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum userRole;
 
+    @Column(nullable = true)
+    private Long kakaoId;
+
     public User(String email, String password, String nickname, UserRoleEnum userRole) {
         this.email = email;
         this.password = password;
         this.username = nickname;
         this.userRole = userRole;
+    }
+
+    public User(String email, String password, String nickname, UserRoleEnum userRole,
+        Long kakaoId) {
+        this.email = email;
+        this.password = password;
+        this.username = nickname;
+        this.userRole = userRole;
+        this.kakaoId = kakaoId;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
+    public void updatedUsername(String username) {
+        this.username = username;
     }
 }

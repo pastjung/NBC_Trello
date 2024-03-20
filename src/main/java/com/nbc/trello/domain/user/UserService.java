@@ -14,4 +14,7 @@ public interface UserService {
 
     @Transactional
     public void logoutUser(HttpServletResponse response, User user);
+
+    @Transactional
+    UserInfoResponseDto updateUser(User user, UserInfoRequestDto requestDto);
 }

@@ -56,4 +56,19 @@ public class UserServiceImpl implements UserService {
             refreshTokenRepository.delete(refreshToken);
         }
     }
+
+    @Override
+    @Transactional
+    public UserInfoResponseDto updateUser(User user, UserInfoRequestDto requestDto){
+        String username = requestDto.getUsername();
+        User savedUser = getUserById(user.getId());
+
+        savedUser.updatedUsername(username);
+        return new UserInfoResponseDto(user.getId(), username);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
 }
