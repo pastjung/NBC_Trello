@@ -65,9 +65,8 @@ public class BoardController {
     //보드 삭제
     @DeleteMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponse<BoardResponseDto>> deleteBoard(
-        @PathVariable Long board_id, @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @RequestBody BoardRequestDto requestDto) {
-        BoardResponseDto responseDto = boardService.deleteBoard(board_id, requestDto,
+        @PathVariable Long board_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BoardResponseDto responseDto = boardService.deleteBoard(board_id,
             userDetails.getUser());
         return ResponseEntity.ok()
             .body(CommonResponse.<BoardResponseDto>builder()
