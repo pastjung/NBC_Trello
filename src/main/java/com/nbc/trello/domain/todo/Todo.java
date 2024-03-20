@@ -41,7 +41,9 @@ public class Todo extends TimeStamped {
     private User user;
 
     @Builder
-    public Todo(String title) {
+    public Todo(Board board, User user, String title) {
+        this.board = board;
+        this.user = user;
         this.title = title;
     }
 
