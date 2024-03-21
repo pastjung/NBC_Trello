@@ -22,8 +22,17 @@ public class Author {
     private Long Id;
 
     @Column
-    private Long user_id;
+    private Long userId;
 
     @Column
-    private Long card_id;
+    private Long cardId;
+
+    @Column
+    private String email;
+
+    public Author(Long user_id, Long card_id, String email) {
+        this.userId = user_id;
+        this.cardId = card_id;
+        this.email = email;
+    }
 }

@@ -28,7 +28,8 @@ public class TodoController {
         @PathVariable Long boardId,
         @RequestBody @Valid TodoRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        TodoResponseDto responseDto = todoService.createTodo(boardId, requestDto, userDetails.getUser());
+        TodoResponseDto responseDto = todoService.createTodo(boardId, requestDto,
+            userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(
             CommonResponse.<TodoResponseDto>builder()
@@ -43,7 +44,8 @@ public class TodoController {
     ResponseEntity<CommonResponse<List<TodoResponseDto>>> getTodos(
         @PathVariable Long boardId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<TodoResponseDto> responseDtoList = todoService.getTodos(boardId, userDetails.getUser());
+        List<TodoResponseDto> responseDtoList = todoService.getTodos(boardId,
+            userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(
             CommonResponse.<List<TodoResponseDto>>builder()
@@ -101,3 +103,4 @@ public class TodoController {
         );
     }
 }
+

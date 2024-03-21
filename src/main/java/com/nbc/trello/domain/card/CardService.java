@@ -37,7 +37,7 @@ public class CardService {
 
         for (Comment com : byCardId) {
             cardCommentResponseDto.getGetCommentResponseDtoList().add(
-                getCommentResponseDto.builder().commentId(com.getId())
+                GetCommentResponseDto.builder().commentId(com.getId())
                     .comment(com.getContent()).build()
             );
         }

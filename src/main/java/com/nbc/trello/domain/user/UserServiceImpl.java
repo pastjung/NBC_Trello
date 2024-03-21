@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(User user){
+    public void deleteUser(User user) {
         List<Participants> participantsList = participantsRepository.findByUserId(user.getId())
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 참가자입니다."));
 
@@ -87,7 +87,8 @@ public class UserServiceImpl implements UserService {
             .map(Participants::getBoardId) // Participants 객체에서 board_id 추출
             .map(boardRepository::findById) // board_id를 이용하여 보드를 찾음
             .forEach(optionalBoard -> {
-                Board board = optionalBoard.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 보드입니다."));
+                Board board = optionalBoard.orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 보드입니다."));
 
                 // 보드를 삭제하기 전에 참가자 리스트에서 제거
                 //participantsList.removeIf(p -> p.getBoardId().equals(board.getId()));

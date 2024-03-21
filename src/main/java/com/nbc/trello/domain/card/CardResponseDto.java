@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+
 @JsonInclude(Include.NON_NULL)
 public class CardResponseDto {
 
