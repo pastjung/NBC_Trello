@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DialectOverride.Version;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,6 +26,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class) //자동으로 LocalDateTime 생성
 public class Card extends TimeStamped {
+
+    @Version(major = 0)
+    private int version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +69,10 @@ public class Card extends TimeStamped {
         this.description = cardRequestDto.getDescription();
         this.color = cardRequestDto.getBackground();
         this.deadline = cardRequestDto.getDeadline();
+    }
+
+    private void updateVersion(int version){
+        this.version = version;
     }
 
 }

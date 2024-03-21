@@ -71,6 +71,11 @@ dependencies {
 	// @Valid : 객체 내부의 다른 객체나 컬렉션에 대한 유효성 검사를 수행, 주로 DTO 를 컨트롤러에서 전달 받을 때 사용
 	// @Pattern : 정규 표현식을 사용하여 문자열의 형식을 검사할 때 사용
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.redisson:redisson-spring-boot-starter:3.27.1'
+
 }
 
 tasks.named('test') {

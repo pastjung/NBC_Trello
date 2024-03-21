@@ -9,13 +9,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DialectOverride.Version;
 
 @Entity
 @Table(name = "authors")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Author {
+
+    @Version(major = 0)
+    private int version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +37,9 @@ public class Author {
         this.userId = user_id;
         this.cardId = card_id;
         this.email = email;
+    }
+
+    private void updateVersion(int version){
+        this.version = version;
     }
 }

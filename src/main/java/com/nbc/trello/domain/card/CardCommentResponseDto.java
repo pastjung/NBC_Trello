@@ -14,7 +14,8 @@ public class CardCommentResponseDto {
     private Long cardId;
     private String name;
     private String description;
-    private List<GetCommentResponseDto> getCommentResponseDtoList = new ArrayList<>();
+    //private List<GetCommentResponseDto> getCommentResponseDtoList = new ArrayList<>();
+    private List<GetCommentResponseDto> getCommentResponseDtoList;
 
     public CardCommentResponseDto(Card card) {
         this.cardId = card.getId();

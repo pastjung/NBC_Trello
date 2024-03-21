@@ -28,7 +28,7 @@ public class CardService {
     }
 
     //카드 단건조회
-    public CardCommentResponseDto CardGetService(Long boardId, Long columnId, Long cardId) {
+    public CardCommentResponseDto CardGetService(Long boardId, Long todoId, Long cardId) {
 
         Card card = cardRepository.findById(cardId).get();
         List<Comment> byCardId = commentRepository.findByCardId(cardId);
@@ -49,15 +49,13 @@ public class CardService {
     }
 
     //카드 삭제
-    public CardResponseDto CardDeleteService(Long boardId, Long columnId, Long cardId) {
+    public void CardDeleteService(Long boardId, Long columnId, Long cardId) {
 
         Card card = cardRepository.findById(cardId).get();
-        if (columnId == card.getTodo().getId()) {
+
+        if (columnId.equals(card.getTodo().getId())) {
             cardRepository.delete(card);
         }
-
-        //return new CardResponseDto(boardId, columnId, cardId);
-        return null;
     }
 
 
@@ -67,7 +65,7 @@ public class CardService {
 
         Card card = cardRepository.findById(cardId).get();
 
-        if (columnId == card.getTodo().getId()) {
+        if (columnId.equals(card.getTodo().getId())) {
             card.CardUpdate(cardRequestDto);
             Card save = cardRepository.save(card);
         }

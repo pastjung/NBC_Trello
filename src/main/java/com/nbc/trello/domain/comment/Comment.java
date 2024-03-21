@@ -15,6 +15,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DialectOverride.Version;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -23,6 +25,9 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "comments")
 @NoArgsConstructor
 public class Comment extends TimeStamped {
+
+    @Version(major = 0)
+    private int version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,5 +54,9 @@ public class Comment extends TimeStamped {
 
     public void update(CommentRequest request) {
         this.content = request.getContent();
+    }
+
+    private void updateVersion(int version){
+        this.version = version;
     }
 }

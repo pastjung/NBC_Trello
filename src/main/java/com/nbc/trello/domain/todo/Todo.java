@@ -15,6 +15,8 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DialectOverride.Version;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -23,6 +25,9 @@ import org.hibernate.annotations.OnDeleteAction;
 @NoArgsConstructor
 @Table(name = "todos")
 public class Todo extends TimeStamped {
+
+    @Version(major = 0)
+    private int version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +63,9 @@ public class Todo extends TimeStamped {
 
     public void updateSequence(Double sequence, Double preSequence) {
         this.sequence = (sequence + preSequence) / 2;
+    }
+
+    private void updateVersion(int version){
+        this.version = version;
     }
 }

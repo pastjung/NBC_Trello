@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DialectOverride.Version;
 
 @Entity
 @Table(name = "boards")
@@ -17,6 +18,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Board extends TimeStamped {
+
+    @Version(major = 0)
+    private int version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +45,9 @@ public class Board extends TimeStamped {
         BoardResponseDto responseDto = new BoardResponseDto();
         responseDto.setBoard_id(this.Id);
         return responseDto;
+    }
+
+    private void updateVersion(int version){
+        this.version = version;
     }
 }

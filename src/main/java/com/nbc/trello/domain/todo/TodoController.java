@@ -15,15 +15,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/boards/{boardId}/todos")
 public class TodoController {
 
     private final TodoService todoService;
 
-    @PostMapping("/boards/{boardId}/todos")
+    @PostMapping
     ResponseEntity<CommonResponse<TodoResponseDto>> createTodo(
         @PathVariable Long boardId,
         @RequestBody @Valid TodoRequestDto requestDto,
@@ -40,7 +42,7 @@ public class TodoController {
         );
     }
 
-    @GetMapping("/boards/{boardId}/todos")
+    @GetMapping
     ResponseEntity<CommonResponse<List<TodoResponseDto>>> getTodos(
         @PathVariable Long boardId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -56,7 +58,7 @@ public class TodoController {
         );
     }
 
-    @PutMapping("/boards/{boardId}/todos/{todoId}")
+    @PutMapping("/{todoId}")
     ResponseEntity<CommonResponse<Void>> updateTodo(
         @PathVariable Long boardId,
         @PathVariable Long todoId,
@@ -72,7 +74,7 @@ public class TodoController {
         );
     }
 
-    @DeleteMapping("/boards/{boardId}/todos/{todoId}")
+    @DeleteMapping("/{todoId}")
     ResponseEntity<CommonResponse<Void>> deleteTodo(
         @PathVariable Long boardId,
         @PathVariable Long todoId,
@@ -87,7 +89,7 @@ public class TodoController {
         );
     }
 
-    @PatchMapping("/boards/{boardId}/todos/{todoId}")
+    @PatchMapping("/{todoId}")
     ResponseEntity<CommonResponse<Void>> changeSequenceTodo(
         @PathVariable Long boardId,
         @PathVariable Long todoId,

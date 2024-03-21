@@ -73,7 +73,7 @@ public class UserController {
         );
     }
 
-    @PutMapping("/user")
+    @PutMapping
     public ResponseEntity<CommonResponse<UserInfoResponseDto>> updateUser(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @Valid @RequestBody UserInfoRequestDto requestDto) {
@@ -87,7 +87,7 @@ public class UserController {
         );
     }
 
-    @DeleteMapping("/user")
+    @DeleteMapping
     public ResponseEntity<CommonResponse<Void>> deleteUser(
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
