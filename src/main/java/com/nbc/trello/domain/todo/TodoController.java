@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,7 +32,7 @@ public class TodoController {
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(
             CommonResponse.<TodoResponseDto>builder()
-                .msg("컬럼 생성 완료")
+                .msg("투두 생성 완료")
                 .statusCode(HttpStatus.CREATED.value())
                 .data(responseDto)
                 .build()
@@ -46,7 +47,7 @@ public class TodoController {
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(
             CommonResponse.<List<TodoResponseDto>>builder()
-                .msg("컬럼 조회 완료")
+                .msg("투두 조회 완료")
                 .statusCode(HttpStatus.OK.value())
                 .data(responseDtoList)
                 .build()
@@ -63,7 +64,7 @@ public class TodoController {
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(
             CommonResponse.<Void>builder()
-                .msg("컬럼 수정 성공")
+                .msg("투두 수정 성공")
                 .statusCode(HttpStatus.OK.value())
                 .build()
         );
@@ -78,7 +79,23 @@ public class TodoController {
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(
             CommonResponse.<Void>builder()
-                .msg("컬럼 삭제 성공")
+                .msg("투두 삭제 성공")
+                .statusCode(HttpStatus.OK.value())
+                .build()
+        );
+    }
+
+    @PatchMapping("/boards/{boardId}/todos/{todoId}")
+    ResponseEntity<CommonResponse<Void>> changeSequenceTodo(
+        @PathVariable Long boardId,
+        @PathVariable Long todoId,
+        @RequestBody TodoSequenceRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        todoService.changeSequenceTodo(boardId, todoId, requestDto, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK.value()).body(
+            CommonResponse.<Void>builder()
+                .msg("투두 순서 이동 성공")
                 .statusCode(HttpStatus.OK.value())
                 .build()
         );

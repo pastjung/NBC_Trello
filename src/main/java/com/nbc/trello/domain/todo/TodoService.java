@@ -2,13 +2,16 @@ package com.nbc.trello.domain.todo;
 
 import com.nbc.trello.domain.board.Board;
 import com.nbc.trello.domain.board.BoardRepository;
+import com.nbc.trello.domain.card.Card;
+import com.nbc.trello.domain.card.CardRepository;
+import com.nbc.trello.domain.card.CardResponseDto;
 import com.nbc.trello.domain.participants.ParticipantsRepository;
 import com.nbc.trello.domain.user.User;
 import com.nbc.trello.domain.user.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -21,6 +24,7 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
     private final BoardRepository boardRepository;
+    private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final ParticipantsRepository participantsRepository;
 
@@ -32,11 +36,25 @@ public class TodoService {
         // 보드 확인
         Board board = findBoard(boardId);
 
-        Todo todo = Todo.builder()
-            .board(board)
-            .user(user)
-            .title(requestDto.getTitle())
-            .build();
+        List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.DESC, "sequence"));
+
+        Todo todo = null;
+
+        if (todoList.isEmpty()) {
+            todo = Todo.builder()
+                .board(board)
+                .user(user)
+                .title(requestDto.getTitle())
+                .sequence(1D)
+                .build();
+        } else {
+            todo = Todo.builder()
+                .board(board)
+                .user(user)
+                .title(requestDto.getTitle())
+                .sequence(todoList.get(0).getSequence() + 1D)
+                .build();
+        }
 
         return new TodoResponseDto(todoRepository.save(todo));
     }
@@ -44,16 +62,26 @@ public class TodoService {
     public List<TodoResponseDto> getTodos(Long boardId, User user) {
         // 유저 확인
         user = findUserBy(user.getEmail());
-        // 참여자 확인
-        validateParticipants(boardId, user.getId());
         // 보드 확인
         Board board = findBoard(boardId);
+        // 참여자 확인
+        validateParticipants(boardId, user.getId());
+        List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.ASC, "sequence"));
+        if (todoList.isEmpty()) {
+            throw new IllegalArgumentException("투두가 존재하지 않습니다.");
+        }
 
-        List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.DESC, "createdAt"));
+        List<TodoResponseDto> result = new ArrayList<>();
+        for (Todo todo : todoList) {
+            List<Card> cardList = cardRepository.findByTodoId(todo.getId());
+            List<CardResponseDto> cardResponseDtoList = cardList.stream()
+                .map(CardResponseDto::new)
+                .toList();
 
-        return todoList.stream()
-            .map(TodoResponseDto::new)
-            .toList();
+            result.add(new TodoResponseDto(todo.getTitle(), cardResponseDtoList));
+        }
+
+        return result;
     }
 
     @Transactional
@@ -64,10 +92,10 @@ public class TodoService {
         validateParticipants(boardId, user.getId());
         // 보드 확인
         Board board = findBoard(boardId);
+        // 보드에 투두 들어있나 확인
+        validateTodoExistInBoard(board.getId(), todoId);
         // 컬럼 확인
         Todo todo = findTodo(todoId);
-        // 컬럼 작성자 확인
-        validateUser(todo.getUser().getId(), user.getId());
 
         todo.update(requestDto);
     }
@@ -80,12 +108,38 @@ public class TodoService {
         validateParticipants(boardId, user.getId());
         // 보드 확인
         Board board = findBoard(boardId);
+        // 보드에 투두 들어있나 확인
+        validateTodoExistInBoard(board.getId(), todoId);
         // 컬럼 확인
         Todo todo = findTodo(todoId);
-        // 컬럼 작성자 확인
-        validateUser(todo.getUser().getId(), user.getId());
 
         todoRepository.delete(todo);
+    }
+
+    @Transactional
+    public void changeSequenceTodo(Long boardId, Long todoId, TodoSequenceRequestDto requestDto,
+        User user) {
+        // 유저 확인
+        user = findUserBy(user.getEmail());
+        // 참여자 확인
+        validateParticipants(boardId, user.getId());
+        // 보드 확인
+        Board board = findBoard(boardId);
+        // 보드에 투두 들어있나 확인
+        validateTodoExistInBoard(boardId, todoId);
+        // 컬럼 확인
+        Todo todo = findTodo(todoId);
+
+        List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.ASC, "sequence"));
+
+        double sequence = todoList.get(requestDto.getSequence()).getSequence();
+        double preSequence = todoList.get(requestDto.getSequence() - 1).getSequence();
+
+        if (requestDto.getSequence() == 1) {
+            todo.updateSequence(preSequence, 0D);
+        } else {
+            todo.updateSequence(sequence, preSequence);
+        }
     }
 
     private User findUserBy(String email) {
@@ -100,18 +154,18 @@ public class TodoService {
 
     private Todo findTodo(Long todoId) {
         return todoRepository.findById(todoId)
-            .orElseThrow(() -> new EntityExistsException("해당 컬럼이 존재하지 않습니다."));
+            .orElseThrow(() -> new EntityExistsException("해당 투두가 존재하지 않습니다."));
+    }
+
+    private void validateTodoExistInBoard(Long boardId, Long todoId) {
+        if (!todoRepository.existsByIdAndBoardId(todoId, boardId)) {
+            throw new EntityExistsException("Board 에 Todo 가 존재하지 않습니다.");
+        }
     }
 
     private void validateParticipants(Long boardId, Long userId) {
         if (!participantsRepository.existsByBoardIdAndUserId(boardId, userId)) {
             throw new EntityExistsException("참여자가 아닙니다.");
-        }
-    }
-
-    private void validateUser(Long writerId, Long inputId) {
-        if (!Objects.equals(writerId, inputId)) {
-            throw new IllegalArgumentException("컬럼 작성자가 아닙니다.");
         }
     }
 }

@@ -29,7 +29,7 @@ public class Todo extends TimeStamped {
     private Long id;
 
     @Column
-    private Long page;
+    private Double sequence;
 
     @Column(nullable = false)
     private String title;
@@ -45,13 +45,18 @@ public class Todo extends TimeStamped {
     private User user;
 
     @Builder
-    public Todo(Board board, User user, String title) {
+    public Todo(Board board, User user, String title, Double sequence) {
         this.board = board;
         this.user = user;
         this.title = title;
+        this.sequence = sequence;
     }
 
     public void update(TodoRequestDto requestDto) {
         this.title = requestDto.getTitle();
+    }
+
+    public void updateSequence(Double sequence, Double preSequence) {
+        this.sequence = (sequence + preSequence) / 2;
     }
 }
