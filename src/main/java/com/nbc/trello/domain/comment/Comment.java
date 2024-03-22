@@ -1,7 +1,6 @@
 package com.nbc.trello.domain.comment;
 
 import com.nbc.trello.domain.card.Card;
-import com.nbc.trello.domain.comment.dto.CommentRequest;
 import com.nbc.trello.domain.timeStamped.TimeStamped;
 import com.nbc.trello.domain.user.User;
 import jakarta.persistence.Column;
@@ -15,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DialectOverride.Version;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -52,7 +50,7 @@ public class Comment extends TimeStamped {
         this.card = card;
     }
 
-    public void update(CommentRequest request) {
+    public void update(CommentRequestDto request) {
         this.content = request.getContent();
     }
 

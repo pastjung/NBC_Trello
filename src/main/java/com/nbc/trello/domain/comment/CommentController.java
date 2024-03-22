@@ -1,7 +1,5 @@
 package com.nbc.trello.domain.comment;
 
-import com.nbc.trello.domain.comment.dto.CommentRequest;
-import com.nbc.trello.domain.comment.dto.CommentResponse;
 import com.nbc.trello.global.response.CommonResponse;
 import com.nbc.trello.global.util.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -25,15 +23,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<CommentResponse>> createComment(
+    public ResponseEntity<CommonResponse<CommentResponseDto>> createComment(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long boardId,
         @PathVariable Long todoId,
         @PathVariable Long cardId,
-        @RequestBody @Valid CommentRequest request) {
+        @RequestBody @Valid CommentRequestDto request) {
 
         return ResponseEntity.ok()
-            .body(CommonResponse.<CommentResponse>builder()
+            .body(CommonResponse.<CommentResponseDto>builder()
                 .statusCode(HttpStatus.OK.value())
                 .data(commentService.createComment(userDetails.getUsername(),
                     boardId, todoId, cardId, request))
@@ -41,16 +39,16 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommonResponse<CommentResponse>> updateComment(
+    public ResponseEntity<CommonResponse<CommentResponseDto>> updateComment(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long boardId,
         @PathVariable Long todoId,
         @PathVariable Long cardId,
         @PathVariable Long commentId,
-        @RequestBody @Valid CommentRequest request) {
+        @RequestBody @Valid CommentRequestDto request) {
 
         return ResponseEntity.ok()
-            .body(CommonResponse.<CommentResponse>builder()
+            .body(CommonResponse.<CommentResponseDto>builder()
                 .statusCode(HttpStatus.OK.value())
                 .data(commentService.updateComment(userDetails.getUsername(),
                     boardId, todoId, cardId, commentId, request))

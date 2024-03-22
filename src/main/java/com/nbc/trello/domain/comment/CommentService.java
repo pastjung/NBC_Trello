@@ -2,8 +2,6 @@ package com.nbc.trello.domain.comment;
 
 import com.nbc.trello.domain.card.Card;
 import com.nbc.trello.domain.card.CardRepository;
-import com.nbc.trello.domain.comment.dto.CommentRequest;
-import com.nbc.trello.domain.comment.dto.CommentResponse;
 import com.nbc.trello.domain.participants.ParticipantsRepository;
 import com.nbc.trello.domain.todo.TodoRepository;
 import com.nbc.trello.domain.user.User;
@@ -25,8 +23,8 @@ public class CommentService {
     private final ParticipantsRepository participantsRepository;
     private final UserRepository userRepository;
 
-    public CommentResponse createComment(String email, Long boardId, Long todoId, Long cardId,
-        CommentRequest request) {
+    public CommentResponseDto createComment(String email, Long boardId, Long todoId, Long cardId,
+        CommentRequestDto request) {
         // 유저 확인
         User user = findUserBy(email);
         // 참여자 확인
@@ -42,11 +40,11 @@ public class CommentService {
 
         Comment saveComment = commentRepository.save(comment);
 
-        return new CommentResponse(email, saveComment.getContent());
+        return new CommentResponseDto(email, saveComment.getContent());
     }
 
-    public CommentResponse updateComment(String email, Long boardId, Long todoId, Long cardId,
-        Long commentId, CommentRequest request) {
+    public CommentResponseDto updateComment(String email, Long boardId, Long todoId, Long cardId,
+        Long commentId, CommentRequestDto request) {
 
         User user = findUserBy(email);
 
@@ -64,7 +62,7 @@ public class CommentService {
 
         comment.update(request);
 
-        return new CommentResponse(comment);
+        return new CommentResponseDto(comment);
     }
 
     public String deleteComment(String email, Long boardId, Long todoId, Long cardId,

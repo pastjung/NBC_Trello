@@ -1,22 +1,21 @@
-package com.nbc.trello.domain.comment.dto;
+package com.nbc.trello.domain.comment;
 
-import com.nbc.trello.domain.comment.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CommentResponse {
+public class CommentResponseDto {
 
     private String username;
     private String content;
 
-    public CommentResponse(Comment comment) {
+    public CommentResponseDto(Comment comment) {
         this.username = comment.getUser().getUsername();
         this.content = comment.getContent();
     }
 
-    public CommentResponse(String username, String content) {
+    public CommentResponseDto(String username, String content) {
         this.username = username;
         this.content = content;
     }
