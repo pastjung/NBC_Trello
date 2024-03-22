@@ -136,19 +136,19 @@ public class TodoService {
         Long todoListIndex = (long) requestDto.getSequence();
 
         if (todoListIndex <= 0 || todoListIndex > todoList.size()) {
-            throw new IllegalArgumentException("해당 순서로 바꿀 수 없습니다.");
-        } else if (todoListIndex == todoList.size()) {
-            todo.updateLastSequence(reverseTodoList.get(0).getSequence());
+        throw new IllegalArgumentException("해당 순서로 바꿀 수 없습니다.");
+    } else if (todoListIndex == todoList.size()) {
+        todo.updateLastSequence(reverseTodoList.get(0).getSequence());
+    } else {
+        double sequence = todoList.get(requestDto.getSequence() - 1).getSequence();
+        if (todoListIndex == 1) {
+            todo.updateSequence(sequence, 0D);
         } else {
-            double sequence = todoList.get(requestDto.getSequence() - 1).getSequence();
-            if (todoListIndex == 1) {
-                todo.updateSequence(sequence, 0D);
-            } else {
-                double preSequence = todoList.get(requestDto.getSequence() - 2).getSequence();
-                todo.updateSequence(sequence, preSequence);
-            }
+            double preSequence = todoList.get(requestDto.getSequence() - 2).getSequence();
+            todo.updateSequence(sequence, preSequence);
         }
     }
+}
 
     private User findUserBy(String email) {
         return userRepository.findByEmail(email).orElseThrow(

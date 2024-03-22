@@ -30,13 +30,10 @@ public class Author {
     @Column
     private Long cardId;
 
-    @Column
-    private String email;
 
-    public Author(Long user_id, Long card_id, String email) {
+    public Author(Long user_id, Long card_id) {
         this.userId = user_id;
         this.cardId = card_id;
-        this.email = email;
     }
 
     private void updateVersion(int version){
