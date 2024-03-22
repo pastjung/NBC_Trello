@@ -77,17 +77,25 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             RefreshToken jwtRefreshTokenObj = new RefreshToken(user, jwtRefreshToken);
 
             refreshTokenRepository.save(jwtRefreshTokenObj);
-        }
 
-        log.info("로그인 성공 및 JWT 생성");
-        response.setStatus(HttpStatus.OK.value());
+            log.info("로그인 성공 및 JWT 생성");
+            response.setStatus(HttpStatus.OK.value());
+        }
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
         HttpServletResponse response, AuthenticationException failed) throws IOException {
-        log.error("로그인 실패");
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        log.error("로그인 실패: " + failed.getMessage());
+
+        CommonResponse<Void> commonResponse = CommonResponse.<Void>builder()
+            .msg("로그인 실패: " + failed.getMessage())
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .build();
+
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(commonResponse));
     }
 
     // refreshToken 검증 : RefreshToken 이 없으면 true
@@ -102,7 +110,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .build();
 
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setContentType("application/json:charset=UTF-8");
+            response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(new ObjectMapper().writeValueAsString(commonResponse));
 
             return false;

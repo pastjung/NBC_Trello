@@ -37,10 +37,10 @@ public class UserServiceImpl implements UserService {
 
         // DB에 User 가 존재하는지 확인
         // isPresent() : Optional 객체에 값이 존재 여부 확인
-//        log.info("회원 존재 확인");
-//        if(userRepository.findByEmail(email).isPresent()){
-//            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-//        }
+        log.info("회원 존재 확인");
+        if(userRepository.findByEmail(email).isPresent()){
+            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+        }
 
         // 새로운 객체 생성
         User user = new User(email, password, nickname, UserRoleEnum.USER);   // role 추가
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
         RefreshToken savedRefreshToken = refreshTokenRepository.findByUserId(user.getId());
 
-        // participantsList의 각 항목에서 board_id 추출하여 삭제
+        // participantsList 의 각 항목에서 board_id 추출하여 삭제
         participantsList.stream()
             .map(Participants::getBoardId) // Participants 객체에서 board_id 추출
             .map(boardRepository::findById) // board_id를 이용하여 보드를 찾음
@@ -90,11 +90,8 @@ public class UserServiceImpl implements UserService {
                 Board board = optionalBoard.orElseThrow(
                     () -> new IllegalArgumentException("존재하지 않는 보드입니다."));
 
-                // 보드를 삭제하기 전에 참가자 리스트에서 제거
-                //participantsList.removeIf(p -> p.getBoardId().equals(board.getId()));
-                boardRepository.delete(board); // 보드 삭제
+                boardRepository.delete(board);
             });
-        //boardRepository.deleteAll(boardList);
 
         refreshTokenRepository.delete(savedRefreshToken);
         participantsRepository.deleteAll(participantsList);
