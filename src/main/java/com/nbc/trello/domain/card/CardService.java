@@ -21,6 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -211,26 +212,44 @@ public class CardService {
             .orElseThrow(()->new IllegalArgumentException("카드가 존재하지 않습니다."));
 
         List<Card> cardList = cardRepository.findAll(Sort.by(Direction.ASC, "sequence"));
-        List<Card> reverseCardList = cardRepository.findAll(Sort.by(Direction.DESC, "sequence"));
 
-        Long cardListIndex = (long) cardSequenceRequestDto.getSequence();
+        int to = cardSequenceRequestDto.getSequence();
 
-        if (cardListIndex <= 0 || cardListIndex > cardList.size()) {
+        if (to < 1 || to > cardList.size()) {
+            // 범위 밖
             throw new IllegalArgumentException("해당 순서로 바꿀 수 없습니다.");
-        } else if (cardListIndex == cardList.size()) {
-            card.updateLastSequence(reverseCardList.get(0).getSequence());
+        } else if (to == cardList.size()) {
+            // 배열의 끝
+            card.updateSequence(cardList.get(cardList.size() - 1).getSequence() + 1);
+        } else if (to == 1) {
+            // 배열의 시작
+            card.updateSequence(cardList.get(0).getSequence() - 1);
         } else {
-            double sequence = cardList.get(cardSequenceRequestDto.getSequence() - 1).getSequence();
-            if (cardListIndex == 1) {
-                card.updateSequence(sequence, 0D );
-            } else {
-                double preSequence = cardList.get(cardSequenceRequestDto.getSequence() - 2)
-                    .getSequence();
-                card.updateSequence(sequence, preSequence);
+            // 배열의 중간
+
+            int from = IntStream.range(0, cardList.size())
+                .filter(i -> cardList.get(i).getId().equals(cardId))
+                .findFirst()
+                .orElse(-1);
+
+            double sequence;
+            double preSequence;
+
+            if(to > from + 1){
+                sequence = cardList.get(to).getSequence();
+                preSequence = cardList.get(to - 1).getSequence();
             }
+            else if(to == from + 1){
+                throw new IllegalArgumentException("자기 자신으로는 이동할 수 없습니다.");
+            }
+            else{
+                sequence = cardList.get(to - 1).getSequence();
+                preSequence = cardList.get(to - 2).getSequence();
+            }
+
+            card.updateSequence(sequence, preSequence);
         }
     }
-
 
     private User findUserBy(String email) {
         return userRepository.findByEmail(email).orElseThrow(

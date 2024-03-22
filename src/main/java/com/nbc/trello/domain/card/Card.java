@@ -83,6 +83,8 @@ public class Card extends TimeStamped {
         this.sequence = (sequence + preSequence) / 2;
     }
 
+    public void updateSequence(Double sequence) { this.sequence = sequence; }
+
     public void updateLastSequence(Double sequence) {
         this.sequence = sequence + 1;
     }
