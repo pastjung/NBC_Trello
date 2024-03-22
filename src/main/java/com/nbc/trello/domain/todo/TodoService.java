@@ -12,6 +12,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -131,24 +132,44 @@ public class TodoService {
         Todo todo = findTodo(todoId);
 
         List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.ASC, "sequence"));
-        List<Todo> reverseTodoList = todoRepository.findAll(Sort.by(Direction.DESC, "sequence"));
 
-        Long todoListIndex = (long) requestDto.getSequence();
+        int to = requestDto.getSequence();
 
-        if (todoListIndex <= 0 || todoListIndex > todoList.size()) {
-        throw new IllegalArgumentException("해당 순서로 바꿀 수 없습니다.");
-    } else if (todoListIndex == todoList.size()) {
-        todo.updateLastSequence(reverseTodoList.get(0).getSequence());
-    } else {
-        double sequence = todoList.get(requestDto.getSequence() - 1).getSequence();
-        if (todoListIndex == 1) {
-            todo.updateSequence(sequence, 0D);
+        if (to < 1 || to > todoList.size()) {
+            // 범위 밖
+            throw new IllegalArgumentException("해당 순서로 바꿀 수 없습니다.");
+        } else if (to == todoList.size()) {
+            // 배열의 끝
+            todo.updateSequence(todoList.get(todoList.size() - 1).getSequence() + 1);
+        } else if (to == 1) {
+            // 배열의 시작
+            todo.updateSequence(todoList.get(0).getSequence() - 1);
         } else {
-            double preSequence = todoList.get(requestDto.getSequence() - 2).getSequence();
+            // 배열의 중간
+
+            int from = IntStream.range(0, todoList.size())
+                .filter(i -> todoList.get(i).getId().equals(todoId))
+                .findFirst()
+                .orElse(-1);
+
+            double sequence;
+            double preSequence;
+
+            if(to > from + 1){
+                sequence = todoList.get(to).getSequence();
+                preSequence = todoList.get(to - 1).getSequence();
+            }
+            else if(to == from + 1){
+                throw new IllegalArgumentException("자기 자신으로는 이동할 수 없습니다.");
+            }
+            else{
+                sequence = todoList.get(to - 1).getSequence();
+                preSequence = todoList.get(to - 2).getSequence();
+            }
+
             todo.updateSequence(sequence, preSequence);
         }
     }
-}
 
     private User findUserBy(String email) {
         return userRepository.findByEmail(email).orElseThrow(
