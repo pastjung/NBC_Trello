@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DialectOverride.Version;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -63,6 +62,10 @@ public class Todo extends TimeStamped {
 
     public void updateSequence(Double sequence, Double preSequence) {
         this.sequence = (sequence + preSequence) / 2;
+    }
+
+    public void updateLastSequence(Double sequence) {
+        this.sequence = sequence + 1;
     }
 
     private void updateVersion(int version){
