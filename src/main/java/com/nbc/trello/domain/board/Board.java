@@ -47,7 +47,7 @@ public class Board extends TimeStamped {
         return responseDto;
     }
 
-    private void updateVersion(int version){
+    private void updateVersion(int version) {
         this.version = version;
     }
 }

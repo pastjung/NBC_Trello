@@ -8,7 +8,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     Optional<List<Author>> findByCardId(Long userId);
 
-   // Optional<Author> findByEmail(String email);
+    // Optional<Author> findByEmail(String email);
 
     Optional<Author> findByCardIdAndUserId(Long cardId, Long userId);
 

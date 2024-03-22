@@ -68,7 +68,7 @@ public class User {
         this.username = username;
     }
 
-    private void updateVersion(int version){
+    private void updateVersion(int version) {
         this.version = version;
     }
 }

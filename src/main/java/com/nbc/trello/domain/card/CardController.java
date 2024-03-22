@@ -1,6 +1,5 @@
 package com.nbc.trello.domain.card;
 
-import com.nbc.trello.domain.todo.TodoSequenceRequestDto;
 import com.nbc.trello.global.response.CommonResponse;
 import com.nbc.trello.global.util.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +64,8 @@ public class CardController {
         @PathVariable Long cardId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        CardResponseDto cardResponseDto = cardService.CardDeleteService(boardId, todoId, cardId, userDetails.getUser());
+        CardResponseDto cardResponseDto = cardService.CardDeleteService(boardId, todoId, cardId,
+            userDetails.getUser());
 
         return ResponseEntity.ok(CommonResponse.<CardResponseDto>builder()
             .msg("카드 삭제에 성공하였습니다.")
@@ -132,7 +132,8 @@ public class CardController {
         @PathVariable Long cardId,
         @RequestBody CardSequenceRequestDto cardSequenceRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        cardService.changeSequenceCard(boardId, todoId, cardId, cardSequenceRequestDto, userDetails.getUser());
+        cardService.changeSequenceCard(boardId, todoId, cardId, cardSequenceRequestDto,
+            userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(
             CommonResponse.<Void>builder()

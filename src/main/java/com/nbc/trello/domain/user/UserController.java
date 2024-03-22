@@ -5,7 +5,6 @@ import com.nbc.trello.global.response.CommonResponse;
 import com.nbc.trello.global.util.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +31,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<CommonResponse<Long>> createUser(
         @Valid @RequestBody SignupRequestDto userRequestDto,
-        BindingResult bindingResult)
-    {
+        BindingResult bindingResult) {
         // @Valid 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (!fieldErrors.isEmpty()) {
@@ -56,8 +54,7 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<CommonResponse<Long>> logoutUser(
         HttpServletResponse response,
-        @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.logoutUser(response, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value()).body(CommonResponse.<Long>builder()
             .msg("로그아웃 되었습니다.")
@@ -70,8 +67,7 @@ public class UserController {
     public ResponseEntity<CommonResponse<UserInfoResponseDto>> updateUser(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @Valid @RequestBody UserInfoRequestDto requestDto,
-        BindingResult bindingResult)
-    {
+        BindingResult bindingResult) {
         // @Valid 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (!fieldErrors.isEmpty()) {
@@ -92,8 +88,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<CommonResponse<Void>> deleteUser(
-        @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.deleteUser(userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(

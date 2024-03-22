@@ -155,14 +155,12 @@ public class TodoService {
             double sequence;
             double preSequence;
 
-            if(to > from + 1){
+            if (to > from + 1) {
                 sequence = todoList.get(to).getSequence();
                 preSequence = todoList.get(to - 1).getSequence();
-            }
-            else if(to == from + 1){
+            } else if (to == from + 1) {
                 throw new IllegalArgumentException("자기 자신으로는 이동할 수 없습니다.");
-            }
-            else{
+            } else {
                 sequence = todoList.get(to - 1).getSequence();
                 preSequence = todoList.get(to - 2).getSequence();
             }

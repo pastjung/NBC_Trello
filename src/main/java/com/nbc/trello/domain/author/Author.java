@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DialectOverride.Version;
 
 @Entity
@@ -36,7 +35,7 @@ public class Author {
         this.cardId = card_id;
     }
 
-    private void updateVersion(int version){
+    private void updateVersion(int version) {
         this.version = version;
     }
 }

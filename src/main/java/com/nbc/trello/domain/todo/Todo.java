@@ -64,7 +64,9 @@ public class Todo extends TimeStamped {
         this.sequence = (sequence + preSequence) / 2;
     }
 
-    public void updateSequence(Double sequence) { this.sequence = sequence; }
+    public void updateSequence(Double sequence) {
+        this.sequence = sequence;
+    }
 
     private void updateVersion(int version) {
         this.version = version;

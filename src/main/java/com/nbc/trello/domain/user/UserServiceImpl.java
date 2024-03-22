@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         // DB에 User 가 존재하는지 확인
         // isPresent() : Optional 객체에 값이 존재 여부 확인
         log.info("회원 존재 확인");
-        if(userRepository.findByEmail(email).isPresent()){
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
 

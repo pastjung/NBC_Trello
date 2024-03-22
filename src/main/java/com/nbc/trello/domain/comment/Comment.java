@@ -54,7 +54,7 @@ public class Comment extends TimeStamped {
         this.content = request.getContent();
     }
 
-    private void updateVersion(int version){
+    private void updateVersion(int version) {
         this.version = version;
     }
 }
