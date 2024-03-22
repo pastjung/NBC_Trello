@@ -131,22 +131,24 @@ public class TodoService {
         Todo todo = findTodo(todoId);
 
         List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.ASC, "sequence"));
+        List<Todo> reverseTodoList = todoRepository.findAll(Sort.by(Direction.DESC, "sequence"));
 
         Long todoListIndex = (long) requestDto.getSequence();
 
-        if (todoListIndex < 0 || todoListIndex > todoList.size()) {
+        if (todoListIndex <= 0 || todoListIndex > todoList.size()) {
             throw new IllegalArgumentException("해당 순서로 바꿀 수 없습니다.");
         } else if (todoListIndex == todoList.size()) {
-            todo.updateLastSequence(requestDto.getSequence() + 0D);
+            todo.updateLastSequence(reverseTodoList.get(0).getSequence());
         } else {
-            double sequence = todoList.get(requestDto.getSequence()).getSequence();
-            double preSequence = todoList.get(requestDto.getSequence() - 1).getSequence();
+            double sequence = todoList.get(requestDto.getSequence() - 1).getSequence();
             if (todoListIndex == 1) {
-                todo.updateSequence(preSequence, 0D);
-            } else
+                todo.updateSequence(sequence, 0D);
+            } else {
+                double preSequence = todoList.get(requestDto.getSequence() - 2).getSequence();
                 todo.updateSequence(sequence, preSequence);
             }
         }
+    }
 
     private User findUserBy(String email) {
         return userRepository.findByEmail(email).orElseThrow(
