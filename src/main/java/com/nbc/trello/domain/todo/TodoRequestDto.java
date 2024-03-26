@@ -1,5 +1,6 @@
 package com.nbc.trello.domain.todo;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,4 +16,6 @@ public class TodoRequestDto {
     @NotBlank(message = "제목은 필수입니다.")
     private String title;
 
+    @Nullable
+    private Integer count;
 }

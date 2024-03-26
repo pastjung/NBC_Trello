@@ -37,6 +37,7 @@ public class TodoService {
         // 보드 확인
         Board board = findBoard(boardId);
 
+
         List<Todo> todoList = todoRepository.findAll(Sort.by(Direction.DESC, "sequence"));
 
         Todo todo = null;
@@ -55,6 +56,10 @@ public class TodoService {
                 .title(requestDto.getTitle())
                 .sequence(todoList.get(0).getSequence() + 1D)
                 .build();
+        }
+
+        if(requestDto.getCount() != null){
+            todo.setCount(requestDto.getCount());
         }
 
         return new TodoResponseDto(todoRepository.save(todo));
@@ -79,7 +84,7 @@ public class TodoService {
                 .map(CardResponseDto::new)
                 .toList();
 
-            result.add(new TodoResponseDto(todo.getTitle(), cardResponseDtoList));
+            result.add(new TodoResponseDto(todo.getTitle(), todo.getCount(), cardResponseDtoList));
         }
 
         return result;

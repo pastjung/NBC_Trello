@@ -13,15 +13,18 @@ import lombok.NoArgsConstructor;
 public class TodoResponseDto {
 
     private String title;
+    private Integer count;
 
     private List<CardResponseDto> cardDtos;
 
     public TodoResponseDto(Todo todo) {
         this.title = todo.getTitle();
+        this.count = todo.getCount();
     }
 
-    public TodoResponseDto(String title, List<CardResponseDto> cardDtos) {
+    public TodoResponseDto(String title, Integer count, List<CardResponseDto> cardDtos) {
         this.title = title;
+        this.count = count;
         this.cardDtos = cardDtos;
     }
 }
