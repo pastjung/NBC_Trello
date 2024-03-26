@@ -44,8 +44,20 @@ public class CardService {
         //보드 검증
         boardRepository.findById(boardId)
             .orElseThrow(() -> new IllegalArgumentException("보드가 존재하지 않습니다."));
+
+        //칼럽이 있는지 검증
+        Todo todo = todoRepository.findById(todoId)
+            .orElseThrow(() -> new IllegalArgumentException("todo에 등록할 todo를 찾을 수 없습니다."));
+
         //보드에 투두가 있는지 검증
         validateTodoExistInBoard(boardId, todoId);
+
+        if(todo.getCount() != null && todo.getCount() == 0){
+            throw new IllegalArgumentException("카드 개수가 제한되어 있습니다.");
+        }
+        if(todo.getCount() != null){
+            todo.setCount(todo.getCount() - 1);
+        }
 
         List<Card> cardList = cardRepository.findAll(Sort.by(Direction.DESC, "sequence"));
 
@@ -60,9 +72,6 @@ public class CardService {
             card.setSequence(cardList.get(0).getSequence() + 1D);
         }
 
-        //칼럽이 있는지 검증
-        Todo todo = todoRepository.findById(todoId)
-            .orElseThrow(() -> new IllegalArgumentException("todo에 등록할 todo를 찾을 수 없습니다."));
         card.setTodo(todo);
         Card save = cardRepository.save(card);
 
@@ -110,9 +119,17 @@ public class CardService {
     public CardResponseDto CardDeleteService(Long boardId, Long todoId, Long cardId, User user) {
         //참여자 검증
         validateParticipants(boardId, user);
+
         //보드 검증
         boardRepository.findById(boardId)
             .orElseThrow(() -> new IllegalArgumentException("보드가 존재하지 않습니다."));
+
+
+        //칼럽이 있는지 검증
+        Todo todo = todoRepository.findById(todoId)
+            .orElseThrow(() -> new IllegalArgumentException("todo에 등록할 todo를 찾을 수 없습니다."));
+
+
         //투두가 있는지 검증
         validateTodoExistInBoard(boardId, todoId);
 
@@ -129,6 +146,10 @@ public class CardService {
 
             //작업자 삭제
             authorRepository.deleteAll(authorList);
+
+            if(todo.getCount() != null){
+                todo.setCount(todo.getCount() + 1);
+            }
         }
 
         return new CardResponseDto(boardId, todoId, cardId);
@@ -200,9 +221,25 @@ public class CardService {
         Todo todo = todoRepository.findById(todoId).
             orElseThrow(() -> new IllegalArgumentException("투두가 존재하지 않습니다."));
 
+        // 이동 받는 투두 개수 확인
+        if(todo.getCount() != null && todo.getCount() == 0){
+            throw new IllegalArgumentException("카드 개수가 제한되어 있습니다.");
+        }
+
+        // 이동하는 투두 개수 증가
+        Todo preTodo = card.getTodo();
+        if(preTodo.getCount() != null){
+            preTodo.setCount(preTodo.getCount() + 1);
+        }
+
         card.setTodo(todo);
 
         cardRepository.save(card);
+
+        // 이동 받는 투두 개수 감소
+        if(todo.getCount() != null){
+            todo.setCount(todo.getCount() - 1);
+        }
 
     }
 

@@ -48,6 +48,9 @@ public class Todo extends TimeStamped {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @Column
+    private Integer count = null;  // 개수 제한
+
     @Builder
     public Todo(Board board, User user, String title, Double sequence) {
         this.board = board;
@@ -70,5 +73,13 @@ public class Todo extends TimeStamped {
 
     private void updateVersion(int version) {
         this.version = version;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public void updateCount() {
+        this.count--;
     }
 }

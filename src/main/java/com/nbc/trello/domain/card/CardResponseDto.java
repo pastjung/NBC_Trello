@@ -22,6 +22,9 @@ public class CardResponseDto {
     }
 
     public CardResponseDto(Card card) {
+        this.columnId = card.getTodo().getId();
+        this.cardId = card.getId();
         this.name = card.getName();
+
     }
 }

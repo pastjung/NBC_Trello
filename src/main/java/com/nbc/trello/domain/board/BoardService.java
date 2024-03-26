@@ -61,7 +61,7 @@ public class BoardService {
                     .map(CardResponseDto::new)
                     .collect(Collectors.toList());
 
-                todoDtos.add(new TodoResponseDto(todo.getTitle(), cardDtos));
+                todoDtos.add(new TodoResponseDto(todo.getTitle(), todo.getCount(), cardDtos));
             }
             result.add(new BoardResponseDto(board.getName(), todoDtos));
         }
