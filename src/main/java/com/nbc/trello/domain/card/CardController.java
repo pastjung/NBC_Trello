@@ -23,6 +23,15 @@ public class CardController {
 
     private final CardService cardService;
 
+    @PostMapping("/test")
+    public void create100(
+        @PathVariable Long boardId,
+        @PathVariable Long todoId,
+        @RequestBody CardRequestDto cardRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails){
+        cardService.create100(boardId,todoId,cardRequestDto, userDetails.getUser());
+    }
+
     @PostMapping()
     public ResponseEntity<CommonResponse<CardResponseDto>> createCard(
         @PathVariable Long boardId,

@@ -18,8 +18,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,15 @@ public class CardService {
     private final AuthorRepository authorRepository;
     private final BoardRepository boardRepository;
 
+    private final RedissonClient redissonClient;
+    private final StringRedisTemplate stringRedisTemplate;  // stringRedisTemplate : Spring 에서 제공하는 StringRedisTemplate 인스턴스로, Redis 와 상호 작용하기 위한 템플릿
+
+    private static final String LOCK_KEY = "counterLock";
+
+    public void create100(Long boardId, Long todoId, CardRequestDto cardRequestDto, User user){
+        IntStream.range(0, 100).parallel().forEach(i -> CardCreateService(boardId, todoId, cardRequestDto, user));
+    }
+
     //카드 등록
     public CardResponseDto CardCreateService(Long boardId, Long todoId,
         CardRequestDto cardRequestDto, User user) {
@@ -51,6 +62,30 @@ public class CardService {
 
         //보드에 투두가 있는지 검증
         validateTodoExistInBoard(boardId, todoId);
+
+        /*
+        RLock lock = redissonClient.getFairLock(LOCK_KEY);
+        try {
+            boolean isLocked = lock.tryLock(10, 60, TimeUnit.SECONDS);
+            if (isLocked) {
+                // 락은 동작중.. isLocked 는 false 가 반환되는 경우가 있다.
+                try {
+                    // 수행문
+                } finally {
+                    lock.unlock();
+                }
+            } else {
+                // retry 핸들링..
+                // 거절하는것도 방법
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+         */
+
+        // 작업중인 Thread 확인
+        final String threadName = Thread.currentThread().getName();
+        System.out.println("threadName = " + threadName);
 
         if(todo.getCount() != null && todo.getCount() == 0){
             throw new IllegalArgumentException("카드 개수가 제한되어 있습니다.");
